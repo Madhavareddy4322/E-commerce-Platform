@@ -1,0 +1,59 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="admin-dashboard p-4 mb-4">
+  <h2 class="text-white mb-4">Admin Dashboard</h2>
+
+  <div class="row text-white">
+    <div class="col-md-4 mb-3">
+      <div class="stat-card p-3">
+        <h5>Orders Today</h5>
+        <p class="display-6">{{ total_orders_today }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="stat-card p-3">
+        <h5>Revenue This Month</h5>
+        <p class="display-6">₹{{ revenue_this_month }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="stat-card p-3">
+        <h5>Low Stock Products</h5>
+        <p class="display-6">{{ low_stock_products|length }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>Low Stock Details</h4>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Stock</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in low_stock_products %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.stock }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="2">No low stock items.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h4 class="mt-4">Revenue (Last 7 Days)</h4>
+<canvas id="revenueChart" height="120"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('revenueChart');
+  const labels = {{ last_7|pluck:"date"|safe }};
+  const data = {{ last_7|pluck:"revenue"|safe }};
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="mb-4">Your Cart</h2>
+
+{% if cart|length == 0 %}
+  <div class="text-center">
+    <img src="{% static 'images/empty_cart.png' %}" alt="Empty cart" class="empty-cart-img mb-3">
+    <p>Your cart is empty.</p>
+    <a href="{% url 'home' %}" class="btn btn-outline-primary">Continue Shopping</a>
+  </div>
+{% else %}
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+        <tr>
+          <td class="d-flex align-items-center">
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-thumb me-2">
+            {% else %}
+              <img src="{% static 'images/empty_cart.png' %}" alt="No image" class="cart-thumb me-2">
+            {% endif %}
+            {{ item.product.name }}
+          </td>
+          <td>{{ item.quantity }}</td>
+          <td>₹{{ item.price }}</td>
+          <td>₹{{ item.total_price }}</td>
+          <td>
+            <a href="{% url 'cart_remove' item.product.id %}"
+               class="btn btn-sm btn-outline-danger">
+              Remove
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <h4>Total: ₹{{ cart.get_total_price }}</h4>
+    <a href="{% url 'checkout' %}" class="btn btn-success">Proceed to Checkout</a>
+  </div>
+{% endif %}
+{% endblock %}

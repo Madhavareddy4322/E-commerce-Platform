@@ -1,0 +1,70 @@
+/* Hero banner using banner_home.jpg */
+.hero-banner {
+    position: relative;
+    height: 260px;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background-image: url("../images/banner_home.jpg");
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 2rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Product images */
+.card-img-top {
+    object-fit: cover;
+    height: 220px;
+}
+
+.product-detail-img {
+    object-fit: cover;
+    max-height: 400px;
+}
+
+/* Cart thumbnails */
+.cart-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+/* Empty cart image */
+.empty-cart-img {
+    max-width: 200px;
+}
+
+/* Admin dashboard background */
+.admin-dashboard {
+    background-image: url("../images/admin_chart_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    border-radius: 0.75rem;
+    position: relative;
+}
+
+.admin-dashboard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.admin-dashboard > * {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+}

@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Order Placed | MyShop{% endblock %}
+
+{% block content %}
+<h2>Order Placed Successfully</h2>
+<p>Your order ID: <strong>#{{ order.id }}</strong></p>
+
+<h4>Payment Summary</h4>
+<ul class="list-group mb-3" style="max-width: 400px;">
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Subtotal</span>
+    <span>₹{{ order.total_amount }}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Discount</span>
+    <span>- ₹{{ order.discount_amount }}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between">
+    <strong>Final Amount</strong>
+    <strong>₹{{ order.final_amount }}</strong>
+  </li>
+</ul>
+
+<p>Status: <strong>{{ order.get_status_display }}</strong></p>
+<p>Shipping to:</p>
+<pre>{{ order.address }}</pre>
+
+<a href="{% url 'my_orders' %}" class="btn btn-primary">Go to My Orders</a>
+{% endblock %}

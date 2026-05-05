@@ -1,0 +1,92 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}{{ product.name }} | MyShop{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-5">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+    {% endif %}
+  </div>
+  <div class="col-md-7">
+    <h2>{{ product.name }}</h2>
+    <p>₹{{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <p>Stock: {{ product.stock }}</p>
+
+    <p>
+      Rating:
+      {% if review_count %}
+        {{ avg_rating|floatformat:1 }} / 5 ({{ review_count }} reviews)
+      {% else %}
+        No reviews yet.
+      {% endif %}
+    </p>
+
+    <!-- ADD TO CART -->
+    <form action="{% url 'cart_add' product.id %}" method="post" class="mb-3">
+      {% csrf_token %}
+      <div class="input-group" style="max-width: 220px;">
+        <input type="number" name="quantity" value="1" min="1" class="form-control">
+        <button type="submit" class="btn btn-success">Add to Cart</button>
+      </div>
+    </form>
+
+    <!-- WISHLIST -->
+    {% if user.is_authenticated %}
+      {% if in_wishlist %}
+        <a href="{% url 'wishlist_remove' product.id %}" class="btn btn-outline-danger">Remove from Wishlist</a>
+      {% else %}
+        <a href="{% url 'wishlist_add' product.id %}" class="btn btn-outline-primary">Add to Wishlist</a>
+      {% endif %}
+    {% else %}
+      <p><a href="{% url 'login' %}">Login</a> to use wishlist.</p>
+    {% endif %}
+  </div>
+</div>
+
+<hr>
+<h3>Reviews</h3>
+
+{% if reviews %}
+  {% for r in reviews %}
+    <div class="mb-3 border rounded p-2">
+      <strong>{{ r.user.username }}</strong>
+      <span>- {{ r.rating }}/5</span>
+      <div><small>{{ r.created_at|date:"Y-m-d H:i" }}</small></div>
+      <p class="mb-0">{{ r.comment }}</p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No reviews yet.</p>
+{% endif %}
+
+{% if can_review %}
+  {% if user_review %}
+    <h4>Your Review</h4>
+    <p>Rating: {{ user_review.rating }}/5</p>
+    <p>{{ user_review.comment }}</p>
+    <p>(You can update it below.)</p>
+  {% endif %}
+
+  <h4>{% if user_review %}Update{% else %}Write{% endif %} a Review</h4>
+
+  <!-- IMPORTANT: USE product.slug HERE -->
+  <form method="post" action="{% url 'add_review' product.slug %}">
+    {% csrf_token %}
+    <div class="mb-2">
+      {{ review_form.rating.label_tag }} {{ review_form.rating }}
+    </div>
+    <div class="mb-2">
+      {{ review_form.comment.label_tag }} {{ review_form.comment }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+  </form>
+
+{% elif user.is_authenticated %}
+  <p class="mt-3 text-muted">You can only review products you have purchased.</p>
+{% else %}
+  <p><a href="{% url 'login' %}">Login</a> to write a review.</p>
+{% endif %}
+{% endblock %}
